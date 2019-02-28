@@ -1,0 +1,41 @@
+{
+    "name": "Scenario",
+    "fields": [
+        {
+            "fieldName": "name",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "threadCount",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "type",
+            "fieldType": "ScenarioType",
+            "fieldValues": "ImportSmall,ImportBig,ReadSmall,ReadBig"
+        },
+        {
+            "fieldName": "startDate",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "endDate",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "approach",
+            "fieldType": "Approach",
+            "fieldValues": "REST,WEBDRIVER"
+        }
+    ],
+    "relationships": [],
+    "changelogDate": "20190228091057",
+    "entityTableName": "scenario",
+    "dto": "no",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

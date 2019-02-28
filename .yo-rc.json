@@ -1,0 +1,35 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "com.mlefree.nuxeoperf"
+    },
+    "jhipsterVersion": "5.8.1",
+    "applicationType": "monolith",
+    "baseName": "nuxeoPerf",
+    "packageName": "com.mlefree.nuxeoperf",
+    "packageFolder": "com/mlefree/nuxeoperf",
+    "serverPort": "8080",
+    "authenticationType": "jwt",
+    "cacheProvider": "no",
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "h2Memory",
+    "prodDatabaseType": "postgresql",
+    "searchEngine": false,
+    "messageBroker": false,
+    "serviceDiscoveryType": false,
+    "buildTool": "gradle",
+    "enableSwaggerCodegen": false,
+    "jwtSecretKey": "YTc5ODk3YTUxNjllNmRiMTMyYTBiZmRiNDIyN2Y2ZDVjMjZkYTc1NTJlMzgyZmJkMzBmZmFhZmRlMGQ1MDQzNDUzMzQ2MTg0NGU3ZTAzZTQ3MGYzZjhiYjUxZDk2NDZmZTAxYmRiNTFjMWMzMjc2ZDhhNzEyZTM5YmQzNDRhYmQ=",
+    "clientFramework": "angularX",
+    "useSass": true,
+    "clientPackageManager": "npm",
+    "testFrameworks": [],
+    "jhiPrefix": "jhi",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": [],
+    "enableTranslation": false,
+    "enableHibernateCache": false
+  }
+}
