@@ -122,7 +122,7 @@ public class NuxeoServiceImpl implements NuxeoService {
 
     private Blob createRandom() {
 
-        File f = new File("MyFile.png");
+        File f = new File("MyFile.gitignored.png");
 
         try {
             BufferedImage img = new BufferedImage(500, 500, BufferedImage.TYPE_INT_RGB);
