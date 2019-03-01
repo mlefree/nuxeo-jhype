@@ -4,18 +4,26 @@ package com.mlefree.nuxeoperf.service.impl;
 import com.mlefree.nuxeoperf.service.NuxeoService;
 import org.nuxeo.client.NuxeoClient;
 import org.nuxeo.client.Operations;
+import org.nuxeo.client.objects.Document;
 import org.nuxeo.client.objects.Documents;
 import org.nuxeo.client.objects.blob.Blob;
+import org.nuxeo.client.objects.blob.Blobs;
 import org.nuxeo.client.objects.blob.FileBlob;
+import org.nuxeo.client.objects.user.Group;
+import org.nuxeo.client.objects.user.User;
+import org.nuxeo.client.objects.user.UserManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PreDestroy;
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.awt.image.BufferedImage;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 
 // todo https://spring.io/guides/gs/batch-processing/ ?
@@ -69,16 +77,43 @@ public class NuxeoServiceImpl implements NuxeoService {
     @Override
     public void importSmall() {
 
-        for (int x = 2; x <= 4; x++) {
+        String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(Calendar.getInstance().getTime());
+
+        int folderId = 0;
+        String folderName = "folder-" + timeStamp + "-" + folderId;
+
+
+        for (int x = 0; x <= 1000; x++) {
+
+            String fileName = "file-" + timeStamp + "-" + x;
+            Document document;
+
+            if ((x % 10) == 0) {
+
+                // Create the folder
+                folderName = "folder-" + timeStamp + "-" + folderId++;
+                document = Document.createWithName(folderName, "Folder");
+                document.setPropertyValue("dc:title", folderName);
+                nuxeoClient.repository().createDocumentByPath("/default-domain/workspaces/test/", document);
+            }
 
             Blob fileBlob = this.createRandom();
 
+            //try {
+
+            document = Document.createWithName(fileName, "File");
+            document.setPropertyValue("dc:title", fileName);
+            nuxeoClient.repository().createDocumentByPath("/default-domain/workspaces/test/" + folderName + "/", document);
+
             nuxeoClient.operation(Operations.BLOB_ATTACH_ON_DOCUMENT)
                 .voidOperation(true)
-                .param("document", "/test/file" + x)
+                .param("document", "/default-domain/workspaces/test/" + folderName + "/" + fileName)
                 .input(fileBlob)
                 .execute();
 
+            //} catch (Exception e) {
+            //    System.out.println("#NUXEO pb: " + e);
+            //}
             // int count = docs.getResultsCount();
             System.out.println("#NUXEO import done: " + x);
         }
@@ -90,16 +125,23 @@ public class NuxeoServiceImpl implements NuxeoService {
         File f = new File("MyFile.png");
 
         try {
-            BufferedImage img = new BufferedImage(
-                500, 500, BufferedImage.TYPE_INT_RGB);
+            BufferedImage img = new BufferedImage(500, 500, BufferedImage.TYPE_INT_RGB);
 
-            int r = 5;
-            int g = 25;
-            int b = 255;
-            int col = (r << 16) | (g << 8) | b;
+            //int r = 5;
+            //int g = 25;
+            //int b = 255;
+
+            int a = (int) (Math.random() * 256); //alpha
+            int r = (int) (Math.random() * 256); //red
+            int g = (int) (Math.random() * 256); //green
+            int b = (int) (Math.random() * 256); //blue
+            int p = (a << 24) | (r << 16) | (g << 8) | b;
+
+            //int col = (r << 16) | (g << 8) | b;
             for (int x = 0; x < 500; x++) {
                 for (int y = 20; y < 300; y++) {
-                    img.setRGB(x, y, col);
+                    //img.setRGB(x, y, col);
+                    img.setRGB(x, y, p);
                 }
             }
             ImageIO.write(img, "JPG", f);
@@ -111,6 +153,35 @@ public class NuxeoServiceImpl implements NuxeoService {
         //File file = new File("MyFile.png");
         Blob fileBlob = new FileBlob(f);
         return fileBlob;
+    }
+
+    private void createUsers() {
+        // Create User/Group
+
+        UserManager userManager = nuxeoClient.userManager();
+        User newUser = new User();
+        newUser.setUserName("toto");
+        newUser.setCompany("Nuxeo");
+        newUser.setEmail("toto@nuxeo.com");
+        newUser.setFirstName("to");
+        newUser.setLastName("to");
+        newUser.setPassword("totopwd");
+        newUser.setTenantId("mytenantid");
+        List<String> groups = new ArrayList<>();
+        groups.add("members");
+        newUser.setGroups(groups);
+        User user = userManager.createUser(newUser);
+
+        if (false) {
+            //UserManager userManager = nuxeoClient.userManager();
+            Group group = new Group();
+            group.setGroupName("totogroup");
+            group.setGroupLabel("Toto Group");
+            List<String> users = new ArrayList<>();
+            users.add("Administrator");
+            group.setMemberUsers(users);
+            group = userManager.createGroup(group);
+        }
     }
 
     /*

@@ -11,6 +11,10 @@ import { RouterModule } from '@angular/router';
             {
                 path: 'scenario',
                 loadChildren: './scenario/scenario.module#NuxeoPerfScenarioModule'
+            },
+            {
+                path: 'scenario',
+                loadChildren: './scenario/scenario.module#NuxeoPerfScenarioModule'
             }
             /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
         ])

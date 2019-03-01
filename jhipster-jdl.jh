@@ -1,5 +1,6 @@
 entity Scenario {
     name String,
+    detail String,
 	threadCount Long,
 	type ScenarioType
 	startDate Instant,

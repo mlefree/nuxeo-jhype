@@ -6,6 +6,10 @@
             "fieldType": "String"
         },
         {
+            "fieldName": "detail",
+            "fieldType": "String"
+        },
+        {
             "fieldName": "threadCount",
             "fieldType": "Long"
         },

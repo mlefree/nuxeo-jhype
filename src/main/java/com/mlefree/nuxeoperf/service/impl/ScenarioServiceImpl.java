@@ -2,7 +2,6 @@ package com.mlefree.nuxeoperf.service.impl;
 
 import com.mlefree.nuxeoperf.domain.enumeration.Approach;
 import com.mlefree.nuxeoperf.domain.enumeration.ScenarioType;
-import com.mlefree.nuxeoperf.service.NuxeoService;
 import com.mlefree.nuxeoperf.service.ScenarioService;
 import com.mlefree.nuxeoperf.domain.Scenario;
 import com.mlefree.nuxeoperf.repository.ScenarioRepository;
@@ -12,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,12 +26,9 @@ public class ScenarioServiceImpl implements ScenarioService {
 
     private final ScenarioRepository scenarioRepository;
 
-    private final NuxeoServiceImpl nuxeoService;
-
     public ScenarioServiceImpl(ScenarioRepository scenarioRepository) {
-
         this.scenarioRepository = scenarioRepository;
-        this.nuxeoService = new NuxeoServiceImpl();
+
     }
 
     /**
@@ -44,11 +41,15 @@ public class ScenarioServiceImpl implements ScenarioService {
     public Scenario save(Scenario scenario) {
         log.debug("Request to save Scenario : {}", scenario);
 
+        log.debug("Request to save Scenario : {}", scenario);
+
+        scenario.startDate(Instant.now());
         // todo Something like this ?
         if (scenario.getApproach() == Approach.REST &&
             scenario.getType() == ScenarioType.ImportSmall) {
-            this.nuxeoService.importSmall();
+            new NuxeoServiceImpl().importSmall();
         }
+        scenario.endDate(Instant.now());
 
         return scenarioRepository.save(scenario);
     }
@@ -86,7 +87,6 @@ public class ScenarioServiceImpl implements ScenarioService {
      */
     @Override
     public void delete(Long id) {
-        log.debug("Request to delete Scenario : {}", id);
-        scenarioRepository.deleteById(id);
+        log.debug("Request to delete Scenario : {}", id);        scenarioRepository.deleteById(id);
     }
 }

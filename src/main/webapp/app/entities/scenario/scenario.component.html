@@ -16,6 +16,7 @@
             <tr>
             <th><span>ID</span></th>
             <th><span>Name</span></th>
+            <th><span>Detail</span></th>
             <th><span>Thread Count</span></th>
             <th><span>Type</span></th>
             <th><span>Start Date</span></th>
@@ -28,6 +29,7 @@
             <tr *ngFor="let scenario of scenarios ;trackBy: trackId">
                 <td><a [routerLink]="['/scenario', scenario.id, 'view' ]">{{scenario.id}}</a></td>
                 <td>{{scenario.name}}</td>
+                <td>{{scenario.detail}}</td>
                 <td>{{scenario.threadCount}}</td>
                 <td>{{scenario.type}}</td>
                 <td>{{scenario.startDate | date:'medium'}}</td>

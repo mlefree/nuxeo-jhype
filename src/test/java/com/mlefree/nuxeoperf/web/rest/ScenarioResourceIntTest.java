@@ -48,6 +48,9 @@ public class ScenarioResourceIntTest {
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
 
+    private static final String DEFAULT_DETAIL = "AAAAAAAAAA";
+    private static final String UPDATED_DETAIL = "BBBBBBBBBB";
+
     private static final Long DEFAULT_THREAD_COUNT = 1L;
     private static final Long UPDATED_THREAD_COUNT = 2L;
 
@@ -109,6 +112,7 @@ public class ScenarioResourceIntTest {
     public static Scenario createEntity(EntityManager em) {
         Scenario scenario = new Scenario()
             .name(DEFAULT_NAME)
+            .detail(DEFAULT_DETAIL)
             .threadCount(DEFAULT_THREAD_COUNT)
             .type(DEFAULT_TYPE)
             .startDate(DEFAULT_START_DATE)
@@ -138,6 +142,7 @@ public class ScenarioResourceIntTest {
         assertThat(scenarioList).hasSize(databaseSizeBeforeCreate + 1);
         Scenario testScenario = scenarioList.get(scenarioList.size() - 1);
         assertThat(testScenario.getName()).isEqualTo(DEFAULT_NAME);
+        assertThat(testScenario.getDetail()).isEqualTo(DEFAULT_DETAIL);
         assertThat(testScenario.getThreadCount()).isEqualTo(DEFAULT_THREAD_COUNT);
         assertThat(testScenario.getType()).isEqualTo(DEFAULT_TYPE);
         assertThat(testScenario.getStartDate()).isEqualTo(DEFAULT_START_DATE);
@@ -176,6 +181,7 @@ public class ScenarioResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(scenario.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
+            .andExpect(jsonPath("$.[*].detail").value(hasItem(DEFAULT_DETAIL.toString())))
             .andExpect(jsonPath("$.[*].threadCount").value(hasItem(DEFAULT_THREAD_COUNT.intValue())))
             .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())))
             .andExpect(jsonPath("$.[*].startDate").value(hasItem(DEFAULT_START_DATE.toString())))
@@ -195,6 +201,7 @@ public class ScenarioResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(scenario.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
+            .andExpect(jsonPath("$.detail").value(DEFAULT_DETAIL.toString()))
             .andExpect(jsonPath("$.threadCount").value(DEFAULT_THREAD_COUNT.intValue()))
             .andExpect(jsonPath("$.type").value(DEFAULT_TYPE.toString()))
             .andExpect(jsonPath("$.startDate").value(DEFAULT_START_DATE.toString()))
@@ -224,6 +231,7 @@ public class ScenarioResourceIntTest {
         em.detach(updatedScenario);
         updatedScenario
             .name(UPDATED_NAME)
+            .detail(UPDATED_DETAIL)
             .threadCount(UPDATED_THREAD_COUNT)
             .type(UPDATED_TYPE)
             .startDate(UPDATED_START_DATE)
@@ -240,6 +248,7 @@ public class ScenarioResourceIntTest {
         assertThat(scenarioList).hasSize(databaseSizeBeforeUpdate);
         Scenario testScenario = scenarioList.get(scenarioList.size() - 1);
         assertThat(testScenario.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testScenario.getDetail()).isEqualTo(UPDATED_DETAIL);
         assertThat(testScenario.getThreadCount()).isEqualTo(UPDATED_THREAD_COUNT);
         assertThat(testScenario.getType()).isEqualTo(UPDATED_TYPE);
         assertThat(testScenario.getStartDate()).isEqualTo(UPDATED_START_DATE);

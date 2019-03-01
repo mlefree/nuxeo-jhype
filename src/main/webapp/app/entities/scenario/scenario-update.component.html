@@ -15,6 +15,11 @@
                         [(ngModel)]="scenario.name" />
                 </div>
                 <div class="form-group">
+                    <label class="form-control-label" for="field_detail">Detail</label>
+                    <input type="text" class="form-control" name="detail" id="field_detail"
+                        [(ngModel)]="scenario.detail" />
+                </div>
+                <div class="form-group">
                     <label class="form-control-label" for="field_threadCount">Thread Count</label>
                     <input type="number" class="form-control" name="threadCount" id="field_threadCount"
                         [(ngModel)]="scenario.threadCount" />

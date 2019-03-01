@@ -29,6 +29,9 @@ public class Scenario implements Serializable {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "detail")
+    private String detail;
+
     @Column(name = "thread_count")
     private Long threadCount;
 
@@ -66,6 +69,19 @@ public class Scenario implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDetail() {
+        return detail;
+    }
+
+    public Scenario detail(String detail) {
+        this.detail = detail;
+        return this;
+    }
+
+    public void setDetail(String detail) {
+        this.detail = detail;
     }
 
     public Long getThreadCount() {
@@ -159,6 +175,7 @@ public class Scenario implements Serializable {
         return "Scenario{" +
             "id=" + getId() +
             ", name='" + getName() + "'" +
+            ", detail='" + getDetail() + "'" +
             ", threadCount=" + getThreadCount() +
             ", type='" + getType() + "'" +
             ", startDate='" + getStartDate() + "'" +

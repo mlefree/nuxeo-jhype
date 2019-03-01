@@ -25,7 +25,7 @@ describe('Service Tests', () => {
             httpMock = injector.get(HttpTestingController);
             currentDate = moment();
 
-            elemDefault = new Scenario(0, 'AAAAAAA', 0, ScenarioType.ImportSmall, currentDate, currentDate, Approach.REST);
+            elemDefault = new Scenario(0, 'AAAAAAA', 'AAAAAAA', 0, ScenarioType.ImportSmall, currentDate, currentDate, Approach.REST);
         });
 
         describe('Service methods', async () => {
@@ -74,6 +74,7 @@ describe('Service Tests', () => {
                 const returnedFromService = Object.assign(
                     {
                         name: 'BBBBBB',
+                        detail: 'BBBBBB',
                         threadCount: 1,
                         type: 'BBBBBB',
                         startDate: currentDate.format(DATE_TIME_FORMAT),
@@ -102,6 +103,7 @@ describe('Service Tests', () => {
                 const returnedFromService = Object.assign(
                     {
                         name: 'BBBBBB',
+                        detail: 'BBBBBB',
                         threadCount: 1,
                         type: 'BBBBBB',
                         startDate: currentDate.format(DATE_TIME_FORMAT),
