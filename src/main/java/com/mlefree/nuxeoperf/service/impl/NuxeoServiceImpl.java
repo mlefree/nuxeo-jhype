@@ -1,13 +1,12 @@
 package com.mlefree.nuxeoperf.service.impl;
 
-
 import com.mlefree.nuxeoperf.service.NuxeoService;
+import okhttp3.Response;
 import org.nuxeo.client.NuxeoClient;
 import org.nuxeo.client.Operations;
 import org.nuxeo.client.objects.Document;
 import org.nuxeo.client.objects.Documents;
 import org.nuxeo.client.objects.blob.Blob;
-import org.nuxeo.client.objects.blob.Blobs;
 import org.nuxeo.client.objects.blob.FileBlob;
 import org.nuxeo.client.objects.user.Group;
 import org.nuxeo.client.objects.user.User;
@@ -18,15 +17,15 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.PreDestroy;
 import javax.imageio.ImageIO;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.awt.image.BufferedImage;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 
-// todo https://spring.io/guides/gs/batch-processing/ ?
 @Service
 @Transactional
 public class NuxeoServiceImpl implements NuxeoService {
@@ -77,13 +76,13 @@ public class NuxeoServiceImpl implements NuxeoService {
     @Override
     public void importSmall() {
 
+        // todo https://spring.io/guides/gs/batch-processing/ ?
         String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(Calendar.getInstance().getTime());
 
         int folderId = 0;
         String folderName = "folder-" + timeStamp + "-" + folderId;
 
-
-        for (int x = 0; x <= 1000; x++) {
+        for (int x = 0; x < 1000; x++) {
 
             String fileName = "file-" + timeStamp + "-" + x;
             Document document;
@@ -119,6 +118,31 @@ public class NuxeoServiceImpl implements NuxeoService {
         }
     }
 
+    public void importBulkSmall() {
+
+
+        try {
+
+            String urlBulk = "http://localhost:8110/nuxeo/site/randomImporter/run?targetPath=/default-domain/workspaces/test-bulk/&nbNodes=500";
+            Response response = this.nuxeoClient.get(urlBulk);
+            //assertEquals(true, response.isSuccessful());
+            String json = response.body().string();
+
+            System.out.println("#NUXEO import json: " + json);
+
+            /*
+            URL urlBulkImport = new URL(urlBulk);
+            HttpURLConnection connection = (HttpURLConnection) urlBulkImport.openConnection();
+            connection.setRequestMethod("GET");
+            connection.getInputStream();
+            */
+        } catch (Exception e) {
+            System.out.println("#NUXEO import pb: " + e);
+        }
+        System.out.println("#NUXEO import done: ");
+
+    }
+
 
     private Blob createRandom() {
 
@@ -126,21 +150,13 @@ public class NuxeoServiceImpl implements NuxeoService {
 
         try {
             BufferedImage img = new BufferedImage(500, 500, BufferedImage.TYPE_INT_RGB);
-
-            //int r = 5;
-            //int g = 25;
-            //int b = 255;
-
-            int a = (int) (Math.random() * 256); //alpha
-            int r = (int) (Math.random() * 256); //red
-            int g = (int) (Math.random() * 256); //green
-            int b = (int) (Math.random() * 256); //blue
-            int p = (a << 24) | (r << 16) | (g << 8) | b;
-
-            //int col = (r << 16) | (g << 8) | b;
             for (int x = 0; x < 500; x++) {
-                for (int y = 20; y < 300; y++) {
-                    //img.setRGB(x, y, col);
+                for (int y = 0; y < 500; y++) {
+                    int a = (int) (Math.random() * 256); //alpha
+                    int r = (int) (Math.random() * 256); //red
+                    int g = (int) (Math.random() * 256); //green
+                    int b = (int) (Math.random() * 256); //blue
+                    int p = (a << 24) | (r << 16) | (g << 8) | b;
                     img.setRGB(x, y, p);
                 }
             }

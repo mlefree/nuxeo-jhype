@@ -13,4 +13,5 @@ public interface NuxeoService {
 
     void searchSmall();
     void importSmall();
+    void importBulkSmall();
 }

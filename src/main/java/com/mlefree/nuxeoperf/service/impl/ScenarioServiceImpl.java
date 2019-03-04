@@ -48,6 +48,9 @@ public class ScenarioServiceImpl implements ScenarioService {
         if (scenario.getApproach() == Approach.REST &&
             scenario.getType() == ScenarioType.ImportSmall) {
             new NuxeoServiceImpl().importSmall();
+        } else if (scenario.getApproach() == Approach.WEBDRIVER &&
+            scenario.getType() == ScenarioType.ImportSmall) {
+            new NuxeoServiceImpl().importBulkSmall();
         }
         scenario.endDate(Instant.now());
 
