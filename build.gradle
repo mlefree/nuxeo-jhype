@@ -242,6 +242,8 @@ dependencies {
     liquibaseRuntime "com.h2database:h2"
     //jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
 
+    // Nuxeo Batch
+    compile 'org.springframework.boot:spring-boot-starter-batch'
     // Nuxeo Tests
     compile group:'org.slf4j', name: 'slf4j-simple', version: '1.+'
     compile group: 'org.nuxeo.client', name: 'nuxeo-java-client', version: '3.2.0'

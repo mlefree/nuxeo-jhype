@@ -6,6 +6,10 @@ import com.mlefree.nuxeoperf.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +32,9 @@ public class ScenarioResource {
 
     private final ScenarioService scenarioService;
 
+    @Autowired
+    JobLauncher jobLauncher;
+
     public ScenarioResource(ScenarioService scenarioService) {
         this.scenarioService = scenarioService;
     }
@@ -45,7 +52,8 @@ public class ScenarioResource {
         if (scenario.getId() != null) {
             throw new BadRequestAlertException("A new scenario cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Scenario result = scenarioService.save(scenario);
+
+        Scenario result = scenarioService.launchAndSave(scenario, jobLauncher);
         return ResponseEntity.created(new URI("/api/scenarios/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);

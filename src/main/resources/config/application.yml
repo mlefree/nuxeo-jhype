@@ -84,6 +84,10 @@ spring:
     thymeleaf:
         mode: HTML
 
+    batch:
+        job:
+            enabled: false
+
 server:
     servlet:
         session:

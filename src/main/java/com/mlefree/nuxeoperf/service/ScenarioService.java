@@ -1,6 +1,7 @@
 package com.mlefree.nuxeoperf.service;
 
 import com.mlefree.nuxeoperf.domain.Scenario;
+import org.springframework.batch.core.launch.JobLauncher;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +18,8 @@ public interface ScenarioService {
      * @return the persisted entity
      */
     Scenario save(Scenario scenario);
+
+    Scenario launchAndSave(Scenario scenario, JobLauncher jobLauncher);
 
     /**
      * Get all the scenarios.

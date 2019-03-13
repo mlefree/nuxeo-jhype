@@ -1,7 +1,7 @@
 package com.mlefree.nuxeoperf.service.impl;
 
+import com.mlefree.nuxeoperf.batch.model.Trade;
 import com.mlefree.nuxeoperf.service.NuxeoService;
-import okhttp3.Response;
 import org.nuxeo.client.NuxeoClient;
 import org.nuxeo.client.Operations;
 import org.nuxeo.client.objects.Document;
@@ -13,13 +13,15 @@ import org.nuxeo.client.objects.user.User;
 import org.nuxeo.client.objects.user.UserManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import okhttp3.ResponseBody;
 
 import javax.annotation.PreDestroy;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.awt.image.BufferedImage;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,15 +29,17 @@ import java.util.List;
 
 
 @Service
-@Transactional
+//@Transactional
 public class NuxeoServiceImpl implements NuxeoService {
 
 
-    private String url = "http://localhost:8110/nuxeo";
+    private String url = "http://nuxeo.docker.localhost/nuxeo";
     private NuxeoClient nuxeoClient;
 
 
     public NuxeoServiceImpl() {
+
+        System.out.println("######### Nuxeo initialisation");
 
         this.nuxeoClient = new NuxeoClient.Builder()
             .url(this.url)
@@ -51,6 +55,7 @@ public class NuxeoServiceImpl implements NuxeoService {
     @PreDestroy
     public void destroy() {
 
+        System.out.println("######### Nuxeo disconnection");
         // To shutdown  the client
         if (this.nuxeoClient != null) {
             this.nuxeoClient.disconnect();
@@ -75,56 +80,113 @@ public class NuxeoServiceImpl implements NuxeoService {
 
     @Override
     public void importSmall() {
+        this.importSmall(null, true);
+    }
 
-        // todo https://spring.io/guides/gs/batch-processing/ ?
-        String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(Calendar.getInstance().getTime());
+    @Override
+    public void importSmall(Trade trade, Boolean async) {
+
+        final String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(Calendar.getInstance().getTime());
 
         int folderId = 0;
-        String folderName = "folder-" + timeStamp + "-" + folderId;
+        String avs = "na";
+        int loop = 1000;
+        if (trade != null) {
+            avs = trade.getAvs();
+            loop = 20;
+        }
 
-        for (int x = 0; x < 1000; x++) {
+        for (int x = 0; x < loop; x++) {
 
-            String fileName = "file-" + timeStamp + "-" + x;
-            Document document;
+            String folderName = "folder-" + timeStamp + "-" + avs + "-" + folderId;
+            String fileName = "file-" + timeStamp + "-" + avs + "-" + x;
 
-            if ((x % 10) == 0) {
+            if ((x % 20) == 0) {
 
                 // Create the folder
-                folderName = "folder-" + timeStamp + "-" + folderId++;
-                document = Document.createWithName(folderName, "Folder");
-                document.setPropertyValue("dc:title", folderName);
-                nuxeoClient.repository().createDocumentByPath("/default-domain/workspaces/test/", document);
+                folderId++;
+                folderName = "folder-" + timeStamp + "-" + avs + "-" + folderId;
+                Document documentFolder = Document.createWithName(folderName, "Folder");
+                documentFolder.setPropertyValue("dc:title", folderName);
+                nuxeoClient.repository().createDocumentByPath("/default-domain/workspaces/test/", documentFolder);
             }
 
-            Blob fileBlob = this.createRandom();
 
             //try {
 
-            document = Document.createWithName(fileName, "File");
-            document.setPropertyValue("dc:title", fileName);
-            nuxeoClient.repository().createDocumentByPath("/default-domain/workspaces/test/" + folderName + "/", document);
+            final String _folderName = ""+ folderName;
+            final String _fileName = ""+ fileName;
+            Document document = Document.createWithName(_fileName, "File");
+            document.setPropertyValue("dc:title", _fileName);
 
-            nuxeoClient.operation(Operations.BLOB_ATTACH_ON_DOCUMENT)
-                .voidOperation(true)
-                .param("document", "/default-domain/workspaces/test/" + folderName + "/" + fileName)
-                .input(fileBlob)
-                .execute();
+            if (async) {
+                nuxeoClient.repository()
+                    .createDocumentByPath("/default-domain/workspaces/test/" + _folderName, document, new Callback<Document>() {
+                        //private final String _folderName = folderName;
+
+                        @Override
+                        public void onResponse(Call<Document> call, Response<Document> response) {
+
+
+                            Blob fileBlob = NuxeoServiceImpl.createRandom();
+                            nuxeoClient.operation(Operations.BLOB_ATTACH_ON_DOCUMENT)
+                                .voidOperation(true)
+                                .param("document", "/default-domain/workspaces/test/" + _folderName + "/" + _fileName)
+                                .input(fileBlob)
+                                .execute(new Callback<ResponseBody>() {
+                                    @Override
+                                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                        // perf: not interested in feedback
+                                        System.out.println(".");
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                        //System.out.println(t.getMessage());
+                                        System.out.print("#");
+                                    }
+                                });
+                        }
+
+                        @Override
+                        public void onFailure(Call<Document> call, Throwable t) {
+                            //System.out.println("Creation pb :" + t.getMessage());
+                            System.out.print("@");
+                        }
+                    });
+            } else {
+
+                nuxeoClient.repository()
+                    .createDocumentByPath("/default-domain/workspaces/test/" + _folderName, document);
+
+                Blob fileBlob = NuxeoServiceImpl.createRandom();
+                nuxeoClient.operation(Operations.BLOB_ATTACH_ON_DOCUMENT)
+                    .voidOperation(true)
+                    .param("document", "/default-domain/workspaces/test/" + _folderName + "/" + _fileName)
+                    .input(fileBlob)
+                    .execute();
+
+                System.out.print("_");
+
+
+            }
 
             //} catch (Exception e) {
             //    System.out.println("#NUXEO pb: " + e);
             //}
             // int count = docs.getResultsCount();
-            System.out.println("#NUXEO import done: " + x);
         }
+
     }
 
+    @Override
     public void importBulkSmall() {
 
 
         try {
 
             String urlBulk = "http://localhost:8110/nuxeo/site/randomImporter/run?targetPath=/default-domain/workspaces/test-bulk/&nbNodes=500";
-            Response response = this.nuxeoClient.get(urlBulk);
+            okhttp3.Response response = this.nuxeoClient.get(urlBulk);
             //assertEquals(true, response.isSuccessful());
             String json = response.body().string();
 
@@ -144,14 +206,14 @@ public class NuxeoServiceImpl implements NuxeoService {
     }
 
 
-    private Blob createRandom() {
+    private static Blob createRandom() {
 
         File f = new File("MyFile.gitignored.png");
 
         try {
-            BufferedImage img = new BufferedImage(500, 500, BufferedImage.TYPE_INT_RGB);
-            for (int x = 0; x < 500; x++) {
-                for (int y = 0; y < 500; y++) {
+            BufferedImage img = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
+            for (int x = 0; x < 100; x++) {
+                for (int y = 0; y < 100; y++) {
                     int a = (int) (Math.random() * 256); //alpha
                     int r = (int) (Math.random() * 256); //red
                     int g = (int) (Math.random() * 256); //green
