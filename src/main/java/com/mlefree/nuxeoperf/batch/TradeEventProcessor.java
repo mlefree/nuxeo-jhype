@@ -22,7 +22,7 @@ public class TradeEventProcessor implements ItemProcessor<TradeEvent, Trade> {
         final Trade trade = new Trade(avs);
 
         System.out.println("Importing (" + tradeEvent + ")");
-        nuxeoService.importSmall(trade, false);
+        nuxeoService.importSmall(trade, true, false);
         System.out.println("Import done (" + tradeEvent + ")");
         // log.trace("Converting (" + tradeEvent + ") into (" + trade + ")");
 

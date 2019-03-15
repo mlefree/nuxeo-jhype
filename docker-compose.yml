@@ -1,0 +1,35 @@
+version: '2'
+services:
+
+    nuxeoperf-app:
+        image: nuxeoperf
+        depends_on:
+          - nuxeoperf-nuxeo
+          - nuxeoperf-postgresql
+        environment:
+            - _JAVA_OPTIONS=-Xmx512m -Xms256m
+            - SPRING_PROFILES_ACTIVE=prod,swagger
+            - SPRING_DATASOURCE_URL=jdbc:postgresql://nuxeoperf-postgresql:5432/nuxeoPerf
+            - JHIPSTER_SLEEP=10 # gives time for the database to boot before the application
+        ports:
+            - 8300:8080
+
+    nuxeoperf-postgresql:
+        image: postgres:10.4
+        # volumes:
+        #     - ~/volumes/jhipster/nuxeoPerf/postgresql/:/var/lib/postgresql/data/
+        environment:
+            - POSTGRES_USER=nuxeoPerf
+            - POSTGRES_PASSWORD=
+        ports:
+            - 8301:5432
+
+
+    nuxeoperf-nuxeo:
+        image: nuxeo:10.10
+        ports:
+            - "8302:8080"
+        environment:
+            #NUXEO_CLID: ${CLID}
+            NUXEO_CUSTOM_PARAM: JAVA_OPTS=$$JAVA_OPTS -Xdebug -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n\nnuxeo.url=http://localhost:8302/nuxeo/\norg.nuxeo.dev=true
+            NUXEO_PACKAGES: nuxeo-web-ui

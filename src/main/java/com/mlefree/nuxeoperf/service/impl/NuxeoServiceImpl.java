@@ -33,7 +33,6 @@ import java.util.List;
 public class NuxeoServiceImpl implements NuxeoService {
 
 
-    private String url = "http://nuxeo.docker.localhost/nuxeo";
     private NuxeoClient nuxeoClient;
 
 
@@ -41,9 +40,25 @@ public class NuxeoServiceImpl implements NuxeoService {
 
         System.out.println("######### Nuxeo initialisation");
 
+        System.out.println(System.getenv("NUXEO_URL"));
+        System.out.println(System.getenv("NUXEO_LOGIN"));
+        System.out.println(System.getenv("NUXEO_PASSWORD"));
+
+        String url = System.getenv("NUXEO_URL");
+        String login = System.getenv("NUXEO_LOGIN");
+        String password = System.getenv("NUXEO_PASSWORD");
+        if (url == null) {
+            url = "http://nuxeoperf-nuxeo:8080/nuxeo";
+            login = "Administrator";
+            password = "Administrator";
+        }
+        System.out.println(url);
+        System.out.println(login);
+        System.out.println(password);
+
         this.nuxeoClient = new NuxeoClient.Builder()
-            .url(this.url)
-            .authentication("Administrator", "Administrator")
+            .url(url)
+            .authentication(login, password)
             .connect();
 
         // To fetch all schemas
@@ -80,20 +95,20 @@ public class NuxeoServiceImpl implements NuxeoService {
 
     @Override
     public void importSmall() {
-        this.importSmall(null, true);
+        this.importSmall(null, true, false);
     }
 
     @Override
-    public void importSmall(Trade trade, Boolean async) {
+    public void importSmall(Trade trade, Boolean async, Boolean image) {
 
         final String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(Calendar.getInstance().getTime());
 
         int folderId = 0;
         String avs = "na";
-        int loop = 1000;
+        int loop = 4000;
         if (trade != null) {
             avs = trade.getAvs();
-            loop = 20;
+            loop = 10;
         }
 
         for (int x = 0; x < loop; x++) {
@@ -112,68 +127,71 @@ public class NuxeoServiceImpl implements NuxeoService {
             }
 
 
-            //try {
+            try {
 
-            final String _folderName = ""+ folderName;
-            final String _fileName = ""+ fileName;
-            Document document = Document.createWithName(_fileName, "File");
-            document.setPropertyValue("dc:title", _fileName);
+                final String _folderName = "" + folderName;
+                final String _fileName = "" + fileName;
+                Document document = Document.createWithName(_fileName, "File");
+                document.setPropertyValue("dc:title", _fileName);
 
-            if (async) {
-                nuxeoClient.repository()
-                    .createDocumentByPath("/default-domain/workspaces/test/" + _folderName, document, new Callback<Document>() {
-                        //private final String _folderName = folderName;
+                if (async) {
+                    nuxeoClient.repository()
+                        .createDocumentByPath("/default-domain/workspaces/test/" + _folderName, document, new Callback<Document>() {
+                            //private final String _folderName = folderName;
 
-                        @Override
-                        public void onResponse(Call<Document> call, Response<Document> response) {
+                            @Override
+                            public void onResponse(Call<Document> call, Response<Document> response) {
+
+                                if (image) {
+                                    Blob fileBlob = NuxeoServiceImpl.createRandom();
+                                    nuxeoClient.operation(Operations.BLOB_ATTACH_ON_DOCUMENT)
+                                        .voidOperation(true)
+                                        .param("document", "/default-domain/workspaces/test/" + _folderName + "/" + _fileName)
+                                        .input(fileBlob)
+                                        .execute(new Callback<ResponseBody>() {
+                                            @Override
+                                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                                // perf: not interested in feedback
+                                                System.out.println(" - ");
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                                //System.out.println(t.getMessage());
+                                                System.out.print("#");
+                                            }
+                                        });
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<Document> call, Throwable t) {
+                                //System.out.println("Creation pb :" + t.getMessage());
+                                System.out.print("@");
+                            }
+                        });
+                } else {
+
+                    nuxeoClient.repository()
+                        .createDocumentByPath("/default-domain/workspaces/test/" + _folderName, document);
+
+                    if (image) {
+                        Blob fileBlob = NuxeoServiceImpl.createRandom();
+                        nuxeoClient.operation(Operations.BLOB_ATTACH_ON_DOCUMENT)
+                            .voidOperation(true)
+                            .param("document", "/default-domain/workspaces/test/" + _folderName + "/" + _fileName)
+                            .input(fileBlob)
+                            .execute();
+                    }
+
+                    System.out.print(".");
 
 
-                            Blob fileBlob = NuxeoServiceImpl.createRandom();
-                            nuxeoClient.operation(Operations.BLOB_ATTACH_ON_DOCUMENT)
-                                .voidOperation(true)
-                                .param("document", "/default-domain/workspaces/test/" + _folderName + "/" + _fileName)
-                                .input(fileBlob)
-                                .execute(new Callback<ResponseBody>() {
-                                    @Override
-                                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                        // perf: not interested in feedback
-                                        System.out.println(".");
-                                    }
+                }
 
-                                    @Override
-                                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                                        //System.out.println(t.getMessage());
-                                        System.out.print("#");
-                                    }
-                                });
-                        }
-
-                        @Override
-                        public void onFailure(Call<Document> call, Throwable t) {
-                            //System.out.println("Creation pb :" + t.getMessage());
-                            System.out.print("@");
-                        }
-                    });
-            } else {
-
-                nuxeoClient.repository()
-                    .createDocumentByPath("/default-domain/workspaces/test/" + _folderName, document);
-
-                Blob fileBlob = NuxeoServiceImpl.createRandom();
-                nuxeoClient.operation(Operations.BLOB_ATTACH_ON_DOCUMENT)
-                    .voidOperation(true)
-                    .param("document", "/default-domain/workspaces/test/" + _folderName + "/" + _fileName)
-                    .input(fileBlob)
-                    .execute();
-
-                System.out.print("_");
-
-
+            } catch (Exception e) {
+                System.out.println("#NUXEO pb: " + e);
             }
-
-            //} catch (Exception e) {
-            //    System.out.println("#NUXEO pb: " + e);
-            //}
             // int count = docs.getResultsCount();
         }
 

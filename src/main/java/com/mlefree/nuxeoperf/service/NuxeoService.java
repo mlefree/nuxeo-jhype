@@ -11,6 +11,6 @@ public interface NuxeoService {
 
     void searchSmall();
     void importSmall();
-    void importSmall(Trade trade, Boolean async);
+    void importSmall(Trade trade, Boolean async, Boolean image);
     void importBulkSmall();
 }

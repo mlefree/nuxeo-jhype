@@ -77,7 +77,7 @@ public class BatchConfiguration {
     public Step jobStep() {
         return stepBuilderFactory
             .get("Extract -> Transform -> Aggregate -> Load")
-            .<TradeEvent, Trade>chunk(1000)
+            .<TradeEvent, Trade>chunk(100)
             .reader(eventReader())
             .processor(eventProcessor())
             .writer(stockVolumeAggregator())
