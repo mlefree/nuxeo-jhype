@@ -147,3 +147,4 @@ Desktop.ini
 *.gitignored*
 .postgres_*
 .gen
+.env
