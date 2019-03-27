@@ -48,7 +48,7 @@ public class NuxeoServiceImpl implements NuxeoService {
         String login = System.getenv("NUXEO_LOGIN");
         String password = System.getenv("NUXEO_PASSWORD");
         if (url == null) {
-            url = "http://nuxeoperf-nuxeo:8080/nuxeo";
+            url = "http://nuxeoperf-nuxeo:8302/nuxeo";
             login = "Administrator";
             password = "Administrator";
         }

@@ -18,18 +18,21 @@ services:
         image: postgres:10.4
         # volumes:
         #     - ~/volumes/jhipster/nuxeoPerf/postgresql/:/var/lib/postgresql/data/
+        volumes:
+            #- ./src/main/docker/postgres/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh:ro
+            - ./.postgres_data:/var/lib/postgresql/data
         environment:
             - POSTGRES_USER=nuxeoPerf
             - POSTGRES_PASSWORD=
+            - POSTGRES_DB=POSTGRESQL
         ports:
             - 8301:5432
-
 
     nuxeoperf-nuxeo:
         image: nuxeo:10.10
         ports:
             - "8302:8080"
         environment:
-            #NUXEO_CLID: ${CLID}
-            NUXEO_CUSTOM_PARAM: JAVA_OPTS=$$JAVA_OPTS -Xdebug -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n\nnuxeo.url=http://localhost:8302/nuxeo/\norg.nuxeo.dev=true
+            NUXEO_CLID: eb2b78ce-8711-4dc7-9193-736102090f16.1555247672.kaz5nR2r/TWyIQSeZLhjzt4aP1RNRuPCroY9wiY7eo5C0RBKH3lEDqHUFA4zx74DVVP5+w/sAWCRLLdjsWTcFLuZ6c2PWamoZHPylETMSiBRXBPNsJZBwABlDFgwhlax5X1CHArcKZVuL53tgk2o0DyLRWBR9B1IcT4oIc3FK5tm/3uEQC5lXq9VWc4EXGd1m4k4Yd4wQcVECLyocQuOu1ObQYO3GmyJ5KoJADlRbQD6dFFg9n/iiQCIcq43kJ/9NwwrZMWnC5ZosELy3cnp05EVvabjxPVZVy8YoSIG5Aah4o60kQHJ+mgjAl0TxUoCD/EQNXWcppXu/pn0fF7nFA==--21b9b89c-a4fa-4371-a901-1c1dd5a78f15
+            NUXEO_CUSTOM_PARAM: JAVA_OPTS=$$JAVA_OPTS -Xdebug -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n\nnuxeo.url=http://localhost:8302/nuxeo/\norg.nuxeo.dev=true\norg.nuxeo.connect.url=https://nos-preprod-connect.nuxeocloud.com/nuxeo/site/
             NUXEO_PACKAGES: nuxeo-web-ui

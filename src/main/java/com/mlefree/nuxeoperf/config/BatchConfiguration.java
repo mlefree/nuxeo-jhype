@@ -3,6 +3,7 @@ package com.mlefree.nuxeoperf.config;
 import com.mlefree.nuxeoperf.batch.JobCompletionNotificationListener;
 import com.mlefree.nuxeoperf.batch.TradeEventProcessor;
 import com.mlefree.nuxeoperf.batch.model.TradeEvent;
+import com.mlefree.nuxeoperf.batch.model.TradeVolume;
 import com.mlefree.nuxeoperf.batch.model.TradeVolumeStore;
 import com.mlefree.nuxeoperf.batch.model.Trade;
 import com.mlefree.nuxeoperf.batch.reader.TradeEventReader;
@@ -14,11 +15,18 @@ import org.springframework.batch.core.configuration.annotation.EnableBatchProces
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
+import org.springframework.batch.item.database.ItemSqlParameterSourceProvider;
+import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+
+import javax.sql.DataSource;
 
 @Configuration
 @EnableBatchProcessing
@@ -53,6 +61,27 @@ public class BatchConfiguration {
     @Bean
     public JobExecutionListener eventListener() {
         return new JobCompletionNotificationListener();
+    }
+
+
+    private static final String QUERY_INSERT_TRADE = "INSERT " +
+        "INTO NUXEOPERF_TRADE(email_address, name, purchased_package) " +
+        "VALUES (:emailAddress, :name, :purchasedPackage)";
+
+    @Bean
+    ItemWriter<TradeVolume> csvFileDatabaseItemWriter(DataSource dataSource,
+                                                      NamedParameterJdbcTemplate jdbcTemplate) {
+        JdbcBatchItemWriter<TradeVolume> databaseItemWriter = new JdbcBatchItemWriter<>();
+        databaseItemWriter.setDataSource(dataSource);
+        databaseItemWriter.setJdbcTemplate(jdbcTemplate);
+
+        databaseItemWriter.setSql(QUERY_INSERT_TRADE);
+
+        ItemSqlParameterSourceProvider<TradeVolume> paramProvider =
+            new BeanPropertyItemSqlParameterSourceProvider<>();
+        databaseItemWriter.setItemSqlParameterSourceProvider(paramProvider);
+
+        return databaseItemWriter;
     }
 
     @Bean(name="tradeVolumeJob")

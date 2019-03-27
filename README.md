@@ -11,6 +11,7 @@ Define your env variables
         String password = System.getenv("NUXEO_PASSWORD");
 
 
+
 ## Using Docker
 
 You can fully dockerize your application and all the services that it depends on.
@@ -19,6 +20,12 @@ To achieve this, first build a docker image of your app by running:
     ./gradlew bootWar -Pprod jibDockerBuild
 
 Then run:
+
+```bash
+
+docker-compose up nuxeoperf-nuxeo
+
+```
 
     #docker-compose -f src/main/docker/app.yml up -d
 
