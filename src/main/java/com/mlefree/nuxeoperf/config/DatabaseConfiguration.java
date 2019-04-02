@@ -61,7 +61,7 @@ public class DatabaseConfiguration {
         return String.valueOf(port);
     }
 
-    @Bean(destroyMethod = "close")
+    //@Bean(destroyMethod = "close")
     DataSource dataSource(Environment env) {
         HikariConfig dataSourceConfig = new HikariConfig();
 
@@ -73,7 +73,7 @@ public class DatabaseConfiguration {
         return new HikariDataSource(dataSourceConfig);
     }
 
-    @Bean
+    //@Bean
     NamedParameterJdbcTemplate jdbcTemplate(DataSource dataSource) {
         return new NamedParameterJdbcTemplate(dataSource);
     }

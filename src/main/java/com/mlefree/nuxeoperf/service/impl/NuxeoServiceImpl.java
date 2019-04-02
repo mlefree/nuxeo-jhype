@@ -105,10 +105,10 @@ public class NuxeoServiceImpl implements NuxeoService {
 
         int folderId = 0;
         String avs = "na";
-        int loop = 4000;
+        int loop = 1000;
         if (trade != null) {
             avs = trade.getAvs();
-            loop = 10;
+            loop = 20;
         }
 
         for (int x = 0; x < loop; x++) {
@@ -123,7 +123,7 @@ public class NuxeoServiceImpl implements NuxeoService {
                 folderName = "folder-" + timeStamp + "-" + avs + "-" + folderId;
                 Document documentFolder = Document.createWithName(folderName, "Folder");
                 documentFolder.setPropertyValue("dc:title", folderName);
-                nuxeoClient.repository().createDocumentByPath("/default-domain/workspaces/test/", documentFolder);
+                nuxeoClient.repository().createDocumentByPath("/default-domain/workspaces/test-perf-java/", documentFolder);
             }
 
 
@@ -136,7 +136,7 @@ public class NuxeoServiceImpl implements NuxeoService {
 
                 if (async) {
                     nuxeoClient.repository()
-                        .createDocumentByPath("/default-domain/workspaces/test/" + _folderName, document, new Callback<Document>() {
+                        .createDocumentByPath("/default-domain/workspaces/test-perf-java/" + _folderName, document, new Callback<Document>() {
                             //private final String _folderName = folderName;
 
                             @Override
@@ -146,7 +146,7 @@ public class NuxeoServiceImpl implements NuxeoService {
                                     Blob fileBlob = NuxeoServiceImpl.createRandom();
                                     nuxeoClient.operation(Operations.BLOB_ATTACH_ON_DOCUMENT)
                                         .voidOperation(true)
-                                        .param("document", "/default-domain/workspaces/test/" + _folderName + "/" + _fileName)
+                                        .param("document", "/default-domain/workspaces/test-perf-java/" + _folderName + "/" + _fileName)
                                         .input(fileBlob)
                                         .execute(new Callback<ResponseBody>() {
                                             @Override
@@ -173,13 +173,13 @@ public class NuxeoServiceImpl implements NuxeoService {
                 } else {
 
                     nuxeoClient.repository()
-                        .createDocumentByPath("/default-domain/workspaces/test/" + _folderName, document);
+                        .createDocumentByPath("/default-domain/workspaces/test-perf-java/" + _folderName, document);
 
                     if (image) {
                         Blob fileBlob = NuxeoServiceImpl.createRandom();
                         nuxeoClient.operation(Operations.BLOB_ATTACH_ON_DOCUMENT)
                             .voidOperation(true)
-                            .param("document", "/default-domain/workspaces/test/" + _folderName + "/" + _fileName)
+                            .param("document", "/default-domain/workspaces/test-perf-java/" + _folderName + "/" + _fileName)
                             .input(fileBlob)
                             .execute();
                     }

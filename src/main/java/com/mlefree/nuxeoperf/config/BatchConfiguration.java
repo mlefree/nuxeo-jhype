@@ -68,7 +68,7 @@ public class BatchConfiguration {
         "INTO NUXEOPERF_TRADE(email_address, name, purchased_package) " +
         "VALUES (:emailAddress, :name, :purchasedPackage)";
 
-    @Bean
+    //@Bean
     ItemWriter<TradeVolume> csvFileDatabaseItemWriter(DataSource dataSource,
                                                       NamedParameterJdbcTemplate jdbcTemplate) {
         JdbcBatchItemWriter<TradeVolume> databaseItemWriter = new JdbcBatchItemWriter<>();

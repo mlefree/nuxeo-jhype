@@ -1,49 +1,37 @@
 # Nuxeo Perf App
 
-> Tools to launch Performance Scenario on your Nuxeo Instance
+> Tools to launch Performance Scenarios on your Nuxeo Instance (import, read etc...)
 
-## Building for production
+![screenshot01](screenshots/Screenshot2019-04-02-01.png)
+![screenshot02](screenshots/Screenshot2019-04-02-02.png)
+![screenshot03](screenshots/Screenshot2019-04-02-03.png)
 
-Define your env variables
+## Launch
 
-        String url = System.getenv("NUXEO_URL");
-        String login = System.getenv("NUXEO_LOGIN");
-        String password = System.getenv("NUXEO_PASSWORD");
+Define your env variables :
 
+```bash
+NUXEO_URL=http://...
+NUXEO_LOGIN=Administrator
+NUXEO_PASSWORD=xxxx
+```
 
-
-## Using Docker
+### Using Docker
 
 You can fully dockerize your application and all the services that it depends on.
 To achieve this, first build a docker image of your app by running:
 
-    ./gradlew bootWar -Pprod jibDockerBuild
-
-Then run:
-
 ```bash
-
-docker-compose up nuxeoperf-nuxeo
-
+./gradlew bootWar -Pprod jibDockerBuild
 ```
 
-    #docker-compose -f src/main/docker/app.yml up -d
+Then run your Nuxeo:
 
-
-To optimize the nuxeoPerf application for production, run:
-
-    ./gradlew -Pprod clean bootWar
-
-This will concatenate and minify the client CSS and JavaScript files. It will also modify `index.html` so it references these new files.
-To ensure everything worked, run:
-
-    java -jar build/libs/*.war
+```bash
+docker-compose up nuxeoperf-nuxeo
+```
 
 Then navigate to [http://localhost:8080](http://localhost:8080) in your browser.
-
-Refer to [Using JHipster in production][] for more details.
-
-**TODO** look at https://github.com/shannah/jdeploy
 
 ## Testing
 
@@ -73,34 +61,11 @@ Then, run a Sonar analysis:
 
 For more information, refer to the [Code quality page][].
 
-## Using Docker to simplify development (optional)
+## Support
 
-You can use Docker to improve your JHipster development experience. A number of docker-compose configuration are available in the [src/main/docker](src/main/docker) folder to launch required third party services.
+@mat_cloud
 
-For example, to start a postgresql database in a docker container, run:
-
-    docker-compose -f src/main/docker/postgresql.yml up -d
-
-To stop it and remove the container, run:
-
-    docker-compose -f src/main/docker/postgresql.yml down
-
-You can also fully dockerize your application and all the services that it depends on.
-To achieve this, first build a docker image of your app by running:
-
-    ./gradlew bootWar -Pprod jibDockerBuild
-
-Then run:
-
-    docker-compose -f src/main/docker/app.yml up -d
-
-For more information refer to [Using Docker and Docker-Compose][], this page also contains information on the docker-compose sub-generator (`jhipster docker-compose`), which is able to generate docker configurations for one or several JHipster applications.
-
-## More
-
-This application was generated using JHipster 5.8.1, you can find documentation and help at [jhipster homepage and latest documentation][].
-
-To configure CI for your project, run the ci-cd sub-generator (`jhipster ci-cd`), this will let you generate configuration files for a number of Continuous Integration systems. Consult the [Setting up Continuous Integration][] page for more information.
+Please pull request !
 
 [jhipster homepage and latest documentation]: https://www.jhipster.tech
 [jhipster 5.8.1 archive]: https://www.jhipster.tech/documentation-archive/v5.8.1
