@@ -17,7 +17,7 @@ logging:
     level:
         ROOT: DEBUG
         io.github.jhipster: DEBUG
-        com.mlefree.nuxeoperf: DEBUG
+        com.mlefree.nuxeojhype: DEBUG
 
 spring:
     profiles:
@@ -29,35 +29,15 @@ spring:
     devtools:
         restart:
             enabled: true
-            additional-exclude: .h2.server.properties
         livereload:
             enabled: false # we use Webpack dev server + BrowserSync for livereload
     jackson:
         serialization:
             indent-output: true
-    datasource:
-        type: com.zaxxer.hikari.HikariDataSource
-        url: jdbc:h2:mem:nuxeoperf;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-        username: nuxeoPerf
-        password:
-        hikari:
-            poolName: Hikari
-            auto-commit: false
-    h2:
-        console:
-            enabled: false
-    jpa:
-        database-platform: io.github.jhipster.domain.util.FixedH2Dialect
-        database: H2
-        show-sql: true
-        properties:
-            hibernate.id.new_generator_mappings: true
-            hibernate.connection.provider_disables_autocommit: true
-            hibernate.cache.use_second_level_cache: false
-            hibernate.cache.use_query_cache: false
-            hibernate.generate_statistics: true
-    liquibase:
-        contexts: dev
+    data:
+        mongodb:
+            uri: mongodb://localhost:27017
+            database: jhype
     mail:
         host: localhost
         port: 25
@@ -80,6 +60,10 @@ server:
 jhipster:
     http:
         version: V_1_1 # To use HTTP/2 you will need to activate TLS (see application-tls.yml)
+    cache: # Cache configuration
+        ehcache: # Ehcache configuration
+            time-to-live-seconds: 3600 # By default objects stay 1 hour in the cache
+            max-entries: 100 # Number of objects in each cache entry
     # CORS is only enabled by default with the "dev" profile, so BrowserSync can access the API
     cors:
         allowed-origins: "*"
@@ -92,12 +76,12 @@ jhipster:
         authentication:
             jwt:
                 # This token must be encoded using Base64 and be at least 256 bits long (you can type `openssl rand -base64 64` on your command line to generate a 512 bits one)
-                base64-secret: YTc5ODk3YTUxNjllNmRiMTMyYTBiZmRiNDIyN2Y2ZDVjMjZkYTc1NTJlMzgyZmJkMzBmZmFhZmRlMGQ1MDQzNDUzMzQ2MTg0NGU3ZTAzZTQ3MGYzZjhiYjUxZDk2NDZmZTAxYmRiNTFjMWMzMjc2ZDhhNzEyZTM5YmQzNDRhYmQ=
+                base64-secret: M2FlMzJlYzBmNWZiMzRlYjRkMTFiYWVkYjgxZmEwYjQxODUxNzE5ZGZjMDBlMzg1MzBkNzg3NmQyNmZkNDRiZjgzMDlkY2IyOTJjNmFkYjRhMjFlM2M1ZDU0NTZjYTg2ZjQ3OWMxNzYxNmRmN2E3Y2JiOWMzZWM3ZjEwOWY3NTQ=
                 # Token is valid 24 hours
                 token-validity-in-seconds: 86400
                 token-validity-in-seconds-for-remember-me: 2592000
     mail: # specific JHipster mail property, for standard properties see MailProperties
-        from: nuxeoPerf@localhost
+        from: jhype@localhost
         base-url: http://127.0.0.1:8080
     metrics:
         logs: # Reports metrics in the logs
