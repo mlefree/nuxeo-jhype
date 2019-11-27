@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, async } from '@angular/core/testing';
 import { Observable, throwError } from 'rxjs';
 
-import { NuxeoPerfTestModule } from '../../../test.module';
+import { JhypeTestModule } from '../../../test.module';
 import { AccountService } from 'app/core';
 import { SettingsComponent } from 'app/account/settings/settings.component';
 
@@ -13,7 +13,7 @@ describe('Component Tests', () => {
 
         beforeEach(async(() => {
             TestBed.configureTestingModule({
-                imports: [NuxeoPerfTestModule],
+                imports: [JhypeTestModule],
                 declarations: [SettingsComponent],
                 providers: []
             })

@@ -4,7 +4,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, of } from 'rxjs';
 import { JhiEventManager } from 'ng-jhipster';
 
-import { NuxeoPerfTestModule } from '../../../test.module';
+import { JhypeTestModule } from '../../../test.module';
 import { ScenarioDeleteDialogComponent } from 'app/entities/scenario/scenario-delete-dialog.component';
 import { ScenarioService } from 'app/entities/scenario/scenario.service';
 
@@ -18,7 +18,7 @@ describe('Component Tests', () => {
 
         beforeEach(() => {
             TestBed.configureTestingModule({
-                imports: [NuxeoPerfTestModule],
+                imports: [JhypeTestModule],
                 declarations: [ScenarioDeleteDialogComponent]
             })
                 .overrideTemplate(ScenarioDeleteDialogComponent, '')

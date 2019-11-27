@@ -1,6 +1,6 @@
 import './vendor.ts';
 
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgbDatepickerConfig } from '@ng-bootstrap/ng-bootstrap';
@@ -38,6 +38,7 @@ import { JhiMainComponent, NavbarComponent, FooterComponent, PageRibbonComponent
         NuxeoPerfEntityModule,
         NuxeoPerfAppRoutingModule
     ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
     declarations: [JhiMainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, FooterComponent],
     providers: [
         {

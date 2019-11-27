@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testin
 import { HttpResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 
-import { NuxeoPerfTestModule } from '../../../test.module';
+import { JhypeTestModule } from '../../../test.module';
 import { ScenarioUpdateComponent } from 'app/entities/scenario/scenario-update.component';
 import { ScenarioService } from 'app/entities/scenario/scenario.service';
 import { Scenario } from 'app/shared/model/scenario.model';
@@ -16,7 +16,7 @@ describe('Component Tests', () => {
 
         beforeEach(() => {
             TestBed.configureTestingModule({
-                imports: [NuxeoPerfTestModule],
+                imports: [JhypeTestModule],
                 declarations: [ScenarioUpdateComponent]
             })
                 .overrideTemplate(ScenarioUpdateComponent, '')

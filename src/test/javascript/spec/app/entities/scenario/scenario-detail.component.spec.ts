@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 
-import { NuxeoPerfTestModule } from '../../../test.module';
+import { JhypeTestModule } from '../../../test.module';
 import { ScenarioDetailComponent } from 'app/entities/scenario/scenario-detail.component';
 import { Scenario } from 'app/shared/model/scenario.model';
 
@@ -15,7 +15,7 @@ describe('Component Tests', () => {
 
         beforeEach(() => {
             TestBed.configureTestingModule({
-                imports: [NuxeoPerfTestModule],
+                imports: [JhypeTestModule],
                 declarations: [ScenarioDetailComponent],
                 providers: [{ provide: ActivatedRoute, useValue: route }]
             })

@@ -148,3 +148,4 @@ Desktop.ini
 .postgres_*
 .gen
 .env
+.env.c*

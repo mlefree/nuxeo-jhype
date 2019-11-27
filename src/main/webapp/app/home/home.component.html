@@ -1,16 +1,128 @@
 <div class="row">
     <div class="col-md-3">
         <!--<span class="hipster img-fluid rounded"></span>-->
-        <img src="https://media.licdn.com/dms/image/C4D0BAQFPXiXFrp4LBA/company-logo_200_200/0?e=2159024400&v=beta&t=RW9EU0QUciUVuPSpLySd9FtJ2yG-O37_hAAvc32f6ro">
+        <img
+            src="https://media.licdn.com/dms/image/C4D0BAQFPXiXFrp4LBA/company-logo_200_200/0?e=2159024400&v=beta&t=RW9EU0QUciUVuPSpLySd9FtJ2yG-O37_hAAvc32f6ro">
     </div>
     <div class="col-md-9">
         <h1 class="display-4">Welcome!</h1>
         <p class="lead">This is your Nuxeo Perf Tool. Please launch our scenario.</p>
 
+
+        <dom-module id="nuxeo-mle_pics-create-layout">
+            <template>
+                <style>
+                    *[role=widget] {
+                        padding: 5px;
+                    }
+                </style>
+                <nuxeo-input role="widget" value="test" label="Title" type="text" required="true"></nuxeo-input>
+
+                <nuxeo-input role="widget" value="test" label="Description" type="text"></nuxeo-input>
+
+                <nuxeo-date-picker role="widget" value="test" label="Mle Date"></nuxeo-date-picker>
+
+                <nuxeo-input role="widget" value="test" label="Mle Title" type="text"></nuxeo-input>
+
+            </template>
+
+            <script>
+                Polymer({
+                    is: 'nuxeo-mle_pics-create-layout',
+                    behaviors: [Nuxeo.LayoutBehavior],
+                    properties: {
+
+                        /**
+                         * @doctype mle_pics
+                         */
+                        document: {
+                            type: Object,
+                        },
+
+                    }
+                });
+            </script>
+        </dom-module>
+        <!--
+        <dom-bind>
+            <template>
+                <nuxeo-connection
+                    id="nx"
+                    url="http://localhost:8110/nuxeo"
+                    username="Administrator"
+                    password="Administrator"
+                ></nuxeo-connection>
+                <nuxeo-page-provider
+                    auto
+                    page-size="5"
+                    [current-page]="1"
+                    query="select * from File where ecm:isTrashed = 0"
+                ></nuxeo-page-provider>
+                <nuxeo-page-provider
+                    auto
+                    page-size="5"
+                    query="select * from File where ecm:isTrashed = 0"
+                ></nuxeo-page-provider>
+                <div class="container" class="layout vertical center">
+
+
+                    <hr/>
+                    <h2>First five results</h2>
+                    <template is="dom-repeat" items="{{docs}}">
+                        <div class="card layout horizontal center">
+                            <h3>[[item.title]]</h3>
+                        </div>
+                    </template>
+                    <h2>First five results with an offset of 2</h2>
+                    <template is="dom-repeat" items="{{docsWithOffset}}">
+                        <div class="card layout horizontal center">
+                            <h3>[[item.title]]</h3>
+                        </div>
+                    </template>
+                </div>
+            </template>
+        </dom-bind>
+        -->
+
+        <!--<nuxeo-search auto searches="{{searches}}"></nuxeo-search>
+        <div class="container" class="layout vertical center">
+            <template is="dom-repeat" items="{{searches}}">
+                <div class="card">
+                    <div class="prop">
+                        <label class="propName">id:</label>
+                        <label class="propValue">[[item.id]]</label>
+                    </div>
+                    <div class="prop">
+                        <label class="propName">title:</label>
+                        <label class="propValue">[[item.title]]</label>
+                    </div>
+                    <template is="dom-if" if="[[item.pageProviderName]]">
+                        <div class="prop">
+                            <label class="propName">page provider:</label>
+                            <label class="propValue">[[item.pageProviderName]]</label>
+                        </div>
+                    </template>
+                    <template is="dom-if" if="[[item.query]]">
+                        <div class="prop">
+                            <label class="propName">query:</label>
+                            <label class="propValue">[[item.query]]</label>
+                        </div>
+                    </template>
+                    <template is="dom-if" if="[[item.queryParams]]">
+                        <div class="prop">
+                            <label class="propName">params:</label>
+                            <label class="propValue">[[item.queryParams]]</label>
+                        </div>
+                    </template>
+                </div>
+            </template>
+        </div>-->
+        <h2>on test..</h2>
+
+
         <div [ngSwitch]="isAuthenticated()">
             <div class="alert alert-success" *ngSwitchCase="true">
-                <span id="home-logged-message" *ngIf="account"
-                   > You are logged in as user "{{account.login}}". </span>
+                <span id="home-logged-message" *ngIf="account"> You are logged in as user "{{account.login}}". </span>
             </div>
 
             <div class="alert alert-warning" *ngSwitchCase="false">

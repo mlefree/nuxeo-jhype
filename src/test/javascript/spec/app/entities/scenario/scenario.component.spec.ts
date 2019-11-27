@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Observable, of } from 'rxjs';
 import { HttpHeaders, HttpResponse } from '@angular/common/http';
 
-import { NuxeoPerfTestModule } from '../../../test.module';
+import { JhypeTestModule } from '../../../test.module';
 import { ScenarioComponent } from 'app/entities/scenario/scenario.component';
 import { ScenarioService } from 'app/entities/scenario/scenario.service';
 import { Scenario } from 'app/shared/model/scenario.model';
@@ -16,7 +16,7 @@ describe('Component Tests', () => {
 
         beforeEach(() => {
             TestBed.configureTestingModule({
-                imports: [NuxeoPerfTestModule],
+                imports: [JhypeTestModule],
                 declarations: [ScenarioComponent],
                 providers: []
             })

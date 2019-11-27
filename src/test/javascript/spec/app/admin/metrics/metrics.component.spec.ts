@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed, async } from '@angular/core/testing';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { of, throwError } from 'rxjs';
 
-import { NuxeoPerfTestModule } from '../../../test.module';
+import { JhypeTestModule } from '../../../test.module';
 import { JhiMetricsMonitoringComponent } from 'app/admin/metrics/metrics.component';
 import { JhiMetricsService } from 'app/admin/metrics/metrics.service';
 
@@ -14,7 +14,7 @@ describe('Component Tests', () => {
 
         beforeEach(async(() => {
             TestBed.configureTestingModule({
-                imports: [NuxeoPerfTestModule],
+                imports: [JhypeTestModule],
                 declarations: [JhiMetricsMonitoringComponent]
             })
                 .overrideTemplate(JhiMetricsMonitoringComponent, '')

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed, async, inject, fakeAsync, tick } from '@angu
 import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { JhiAlertService, JhiEventManager } from 'ng-jhipster';
 
-import { NuxeoPerfTestModule } from '../../../test.module';
+import { JhypeTestModule } from '../../../test.module';
 import { JhiAlertErrorComponent } from 'app/shared/alert/alert-error.component';
 import { MockAlertService } from '../../../helpers/mock-alert.service';
 
@@ -14,7 +14,7 @@ describe('Component Tests', () => {
 
         beforeEach(async(() => {
             TestBed.configureTestingModule({
-                imports: [NuxeoPerfTestModule],
+                imports: [JhypeTestModule],
                 declarations: [JhiAlertErrorComponent],
                 providers: [
                     JhiEventManager,

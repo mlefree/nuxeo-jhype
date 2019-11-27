@@ -57,6 +57,9 @@ import 'zone.js/dist/zone'; // Included with Angular CLI.
  * APPLICATION IMPORTS
  */
 
+import "@webcomponents/custom-elements/src/native-shim";
+import "@webcomponents/custom-elements/custom-elements.min";
+
 /**
  * Date, currency, decimal and percent pipes.
  * Needed for: All but Chrome, Firefox, Edge, IE11 and Safari 10

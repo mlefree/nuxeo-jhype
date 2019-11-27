@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { Renderer, ElementRef } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 
-import { NuxeoPerfTestModule } from '../../../../test.module';
+import { JhypeTestModule } from '../../../../test.module';
 import { PasswordResetInitComponent } from 'app/account/password-reset/init/password-reset-init.component';
 import { PasswordResetInitService } from 'app/account/password-reset/init/password-reset-init.service';
 import { EMAIL_NOT_FOUND_TYPE } from 'app/shared';
@@ -14,7 +14,7 @@ describe('Component Tests', () => {
 
         beforeEach(() => {
             fixture = TestBed.configureTestingModule({
-                imports: [NuxeoPerfTestModule],
+                imports: [JhypeTestModule],
                 declarations: [PasswordResetInitComponent],
                 providers: [
                     {
